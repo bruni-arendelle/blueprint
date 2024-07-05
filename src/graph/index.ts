@@ -203,10 +203,10 @@ export function createGraph(el: HTMLElement) {
       magnetAvailable: {
         name: 'stroke',
         args: {
-          padding: 4,
+          padding: 3,
           attrs: {
-            strokeWidth: 2,
-            stroke: '#ff4500',
+            stroke: '#2080f0',
+            'stroke-width': 3,
           },
         },
       },
@@ -224,7 +224,7 @@ export function createGraph(el: HTMLElement) {
         // 主网格
         {color: '#f1f1f1', thickness: 1},
         // 次网格
-        {color: '#e1e1e1', thickness: 1, factor: 4},
+        {color: '#eee', thickness: 1, factor: 4},
       ],
     },
   })

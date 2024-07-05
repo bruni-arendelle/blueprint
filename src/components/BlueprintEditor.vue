@@ -15,6 +15,7 @@
 import { ref, onMounted, onBeforeUnmount, shallowReactive, nextTick } from 'vue'
 import { Cell, CellView, Graph } from '@antv/x6'
 import { createGraph } from '../graph'
+import { restrictRect, observerResize } from '../utils';
 
 
 const layout = ref<HTMLElement|null>(null)
@@ -25,21 +26,6 @@ const view = shallowReactive({
   width: '100%',
   height: '100%',
 })
-
-function handleResize() {
-  if (layout.value) {
-    const unit = Math.floor(Math.min(
-      layout.value.clientWidth/16,
-      (layout.value.clientHeight - 40)/9,
-      120,
-    ))
-    view.width = unit * 16 + 'px'
-    view.height = unit * 9 + 40 + 'px'
-  } else {
-    view.width = '100%'
-    view.height = '100%'
-  }
-}
 
 function loadGraph() {
   graph = createGraph(blueprint.value!)
@@ -91,13 +77,16 @@ function loadGraph() {
   node2.attr('main/height', 24*2 + 12)
 }
 
-let resizeObserver: ResizeObserver|null = null
+let cancelObserver: undefined|(() => void) = undefined
 
 onMounted(() => {
-  handleResize()
-  resizeObserver = new ResizeObserver(handleResize)
-  resizeObserver.observe(layout.value!)
-
+  cancelObserver = observerResize(layout.value!, function(width, height) {
+    const [w, h] = restrictRect(
+      [Math.min(width, 1920), Math.min(height - 40, 1080)], [16, 9]
+    )
+    view.width = Math.floor(w) + 'px'
+    view.height = Math.floor(h + 40) + 'px'
+  })
   nextTick(() => {
     loadGraph()
   })
@@ -107,9 +96,9 @@ onBeforeUnmount(() => {
   if (graph) {
     graph.dispose(true)
   }
-  if (resizeObserver) {
-    resizeObserver.disconnect()
-    resizeObserver = null
+  if (cancelObserver) {
+    cancelObserver()
+    cancelObserver = undefined
   }
 })
 </script>
