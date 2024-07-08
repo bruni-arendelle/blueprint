@@ -30,14 +30,6 @@ interface ChartComponent extends Entity {
   // 
 }
 
-interface Request {
-  url: string
-  method: 'GET'|'POST'
-  headers: Array<{key: string, value: string}>
-  payload: Record<string, any>
-  interval: number
-}
-
 /** 公共数据 */
 interface PublicData extends Entity {
   /** 变量名 */
@@ -46,12 +38,10 @@ interface PublicData extends Entity {
   desc: string
   /** 类型 */
   type: string
-  /** 请求 */
-  requests: Array<Request|((...args: any[]) => Request)>
 }
 
 /** 自定义动作 */
-interface Action extends Entity {
+interface ActionEntity extends Entity {
   /** 参数名 */
   argName: string
   /** 参数类型 */
@@ -60,18 +50,50 @@ interface Action extends Entity {
   action: string
 }
 
+/** 常规请求 */
+type NormalRequest = {
+  type: 'normal'
+  url: string
+  method: 'GET'|'POST'
+  headers: Array<{key: string, value: string}>
+  /** 参数 */
+  payload: object
+  /** 执行间隔 */
+  interval: number
+  /** 是否立即执行 */
+  immediate: boolean
+  filter: string|null
+}
+
+/** oName 快捷请求 */
+type OnameRequest = {
+  type: 'oname'
+  oname: string
+  /** 执行间隔 */
+  interval: number
+  /** 是否立即执行 */
+  immediate: boolean
+  filter: string|null
+}
+
+interface RequestEntity extends Entity {
+  requests: Array<NormalRequest|OnameRequest>
+}
+
 /** 项目数据 */
 type ProjectData = {
   /** 组件 */
   components: Array<ChartComponent>
-  /** 公共变量 */
-  publicdata: Array<PublicData>
-  /** 自定义动作 */
-  actions: Array<Action>
-  /** 连接记录 */
-  connections: Array<Connection.Connection>
   /** 蓝图配置 */
   blueprint: {
+    /** 公共变量 */
+    publicdata: Array<PublicData>
+    /** 自定义动作 */
+    actions: Array<ActionEntity>
+    /** 自定义请求 */
+    requests: Array<RequestEntity>
+    /** 连接记录 */
+    connections: Array<Connection.Connection>
     /** 节点位置和层级 */
     nodes: Array<{id: string, x: number, y: number, z: number}>
   }
@@ -100,14 +122,15 @@ export async function getProjectData(): Promise<ProjectData> {
       id: 'button_1',
       title: '查询提交',
     }],
-    /** 公共数据 */
-    publicdata: [],
-    /** 自定义节点 */
-    actions: [],
-    /** 连接记录 */
-    connections: [],
     blueprint: {
-      nodes: []
+      /** 公共数据 */
+      publicdata: [],
+      /** 自定义节点 */
+      actions: [],
+      requests: [],
+      /** 连接记录 */
+      connections: [],
+      nodes: [],
     }
   }
 }

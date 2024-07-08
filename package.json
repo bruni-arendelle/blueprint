@@ -13,6 +13,7 @@
     "@vicons/carbon": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "naive-ui": "^2.38.2",
+    "uuid": "^10.0.0",
     "vue": "^3.4.29"
   },
   "devDependencies": {
