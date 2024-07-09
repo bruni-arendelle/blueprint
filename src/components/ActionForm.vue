@@ -46,18 +46,13 @@ import {
   NButton,
   NForm,
   NFormItem,
+  NInput,
 } from 'naive-ui'
 import { ref, shallowReactive, watch } from 'vue';
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 
-type Props = {
-  show?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  show: false
-})
+const props = defineProps<{show: boolean}>()
 const visible = ref(false)
 watch(() => props.show, newValue => {
   if (newValue !== visible.value) {

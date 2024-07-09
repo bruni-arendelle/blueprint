@@ -4,10 +4,14 @@
       <div class="blueprint__toolbar">
         <!-- 工具栏 -->
       </div>
-      <div class="blueprint__wrapper">
+      <div class="blueprint__main">
         <div class="blueprint__graph" ref="blueprint"></div>
       </div>
+      <NButton circle type="success" @click="actionFormVisible = true" style="position: absolute; bottom: 20px; right: 20px;">
+        <template #icon><NIcon><AddIcon></AddIcon></NIcon></template>
+      </NButton>
     </div>
+    <ActionForm v-model:show="actionFormVisible"></ActionForm>
   </div>
 </template>
 
@@ -15,17 +19,39 @@
 import { ref, onMounted, onBeforeUnmount, shallowReactive, nextTick } from 'vue'
 import { Cell, CellView, Graph } from '@antv/x6'
 import { createGraph } from '../graph'
-import { restrictRect, observerResize } from '../utils';
+import { restrictRect, onResize } from '../utils';
+import ActionForm from './ActionForm.vue';
+import { NButton, NIcon } from 'naive-ui';
+import { Add as AddIcon } from '@vicons/carbon'
 
 
 const layout = ref<HTMLElement|null>(null)
-const blueprint = ref<HTMLElement|null>(null)
-let graph: Graph|null = null
-
 const view = shallowReactive({
   width: '100%',
   height: '100%',
 })
+
+let cancelObserver: undefined|(() => void) = undefined
+
+onMounted(() => {
+  cancelObserver = onResize(layout.value!, function(width, height) {
+    const [w, h] = restrictRect(
+      [Math.min(width, 1920), Math.min(height - 40, 1080)], [16, 9]
+    )
+    view.width = Math.floor(w) + 'px'
+    view.height = Math.floor(h + 40) + 'px'
+  })
+})
+
+onBeforeUnmount(() => {
+  if (cancelObserver) {
+    cancelObserver()
+    cancelObserver = undefined
+  }
+})
+
+const blueprint = ref<HTMLElement|null>(null)
+let graph: Graph|null = null
 
 function loadGraph() {
   graph = createGraph(blueprint.value!)
@@ -77,16 +103,7 @@ function loadGraph() {
   node2.attr('main/height', 24*2 + 12)
 }
 
-let cancelObserver: undefined|(() => void) = undefined
-
 onMounted(() => {
-  cancelObserver = observerResize(layout.value!, function(width, height) {
-    const [w, h] = restrictRect(
-      [Math.min(width, 1920), Math.min(height - 40, 1080)], [16, 9]
-    )
-    view.width = Math.floor(w) + 'px'
-    view.height = Math.floor(h + 40) + 'px'
-  })
   nextTick(() => {
     loadGraph()
   })
@@ -96,11 +113,9 @@ onBeforeUnmount(() => {
   if (graph) {
     graph.dispose(true)
   }
-  if (cancelObserver) {
-    cancelObserver()
-    cancelObserver = undefined
-  }
 })
+
+const actionFormVisible = ref(false)
 </script>
 
 <style scoped>
@@ -134,7 +149,7 @@ onBeforeUnmount(() => {
   left: 0;
 }
 
-.blueprint__wrapper {
+.blueprint__main {
   width: 100%;
   height: 100%;
 }

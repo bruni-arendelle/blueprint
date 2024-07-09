@@ -2,9 +2,9 @@ import { CellView, Graph } from '@antv/x6'
 
 
 export function initGraph() {
-  const HEADER = 32
+  const HEADER = 26
   const RADIUS = 5
-  const MARGIN = 8
+  const MARGIN = 6
 
   try {
     Graph.registerPortLayout('mainleft', function(args: any[]) {

@@ -13,7 +13,7 @@ export function restrictRect(extent: Rect, ratio: Rect): Rect {
 }
 
 /** 监听元素尺寸改变 */
-export function observerResize(el: HTMLElement, cb: (width: number, height: number) => void): (() => void) {
+export function onResize(el: HTMLElement, cb: (width: number, height: number) => void): (() => void) {
   if (window.ResizeObserver) {
     cb(el.clientWidth, el.clientHeight)
     const resizeObserver = new ResizeObserver(function() {

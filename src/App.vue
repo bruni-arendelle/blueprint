@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import {
-  NConfigProvider,
-  // NMessageProvider,
-  NDialogProvider,
-  // NNotificationProvider,
-  darkTheme,
-  NLayout,
-  NLayoutSider,
-  NLayoutHeader,
-  // NLayoutContent,
-  NText,
-  NTooltip,
-  NIcon,
-  NModal,
-} from 'naive-ui'
-// import { FloatingIp, EdtLoop } from '@vicons/carbon'
-import { AllInclusiveSharp } from '@vicons/material'
-import BlueprintEditor from './components/BlueprintEditor.vue';
-import { ref } from 'vue';
-
-const blueprintVisible = ref(false)
-</script>
-
 <template>
   <n-config-provider :theme="darkTheme" abstract>
     <n-dialog-provider>
@@ -60,6 +36,30 @@ const blueprintVisible = ref(false)
   </n-config-provider>
 </template>
 
+<script setup lang="ts">
+import {
+  NConfigProvider,
+  // NMessageProvider,
+  NDialogProvider,
+  // NNotificationProvider,
+  darkTheme,
+  NLayout,
+  NLayoutSider,
+  NLayoutHeader,
+  // NLayoutContent,
+  NText,
+  NTooltip,
+  NIcon,
+  NModal,
+} from 'naive-ui'
+// import { FloatingIp, EdtLoop } from '@vicons/carbon'
+import { AllInclusiveSharp } from '@vicons/material'
+import BlueprintEditor from './components/BlueprintEditor.vue';
+import { ref } from 'vue';
+
+const blueprintVisible = ref(false)
+</script>
+
 <style scoped>
 .sidemenu {
   display: flex;
@@ -68,6 +68,7 @@ const blueprintVisible = ref(false)
   width: 100%;
   height: 100%;
 }
+
 .sidemenu__btn {
   flex: none;
   width: 48px;
@@ -78,9 +79,11 @@ const blueprintVisible = ref(false)
   cursor: pointer;
   opacity: 0.6;
 }
+
 .sidemenu__btn:hover {
   opacity: 1;
 }
+
 .blueprint-container {
   width: 100%;
   height: 100%;
