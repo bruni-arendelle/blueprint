@@ -31,9 +31,9 @@
       <n-form-item label="动作" path="action" first>
         <n-input v-model:value="formdata.action" placeholder="动作" />
       </n-form-item>
-      <div style="display: flex; justify-content: flex-end">
+      <div style="display: flex; justify-content: flex-end;">
         <n-button size="medium" @click="handleCancel">取消</n-button>
-        <n-button size="medium" type="primary" @click="handleSubmit">保存</n-button>
+        <n-button size="medium" type="success" class="ml-3" @click="handleSubmit">保存</n-button>
       </div>
     </n-form>
     </n-card>

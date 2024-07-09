@@ -7,14 +7,35 @@
       <div class="blueprint__main">
         <div class="blueprint__graph" ref="blueprint"></div>
       </div>
-      <n-tooltip placement="left">
-        <template #trigger>
-          <n-button circle type="success" @click="handleCreateAction" style="position: absolute; bottom: 20px; right: 20px;">
-            <template #icon><n-icon><AddIcon></AddIcon></n-icon></template>
-          </n-button>
-        </template>
-        添加动作节点
-      </n-tooltip>
+      <div class="blueprint__btns">
+        <n-tooltip placement="left">
+          <template #trigger>
+            <n-button circle type="info" class="shadow-md" @click="handleCreateAction">
+              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
+              <span class="text-xs font-medium">R</span>
+            </n-button>
+          </template>
+          自定义请求
+        </n-tooltip>
+        <n-tooltip placement="left">
+          <template #trigger>
+            <n-button circle type="success" class="mt-3 shadow-md" @click="handleCreateAction">
+              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
+              <span class="text-xs font-medium">D</span>
+            </n-button>
+          </template>
+          自定义公共数据
+        </n-tooltip>
+        <n-tooltip placement="left">
+          <template #trigger>
+            <n-button circle type="warning" class="mt-3 shadow-md" @click="handleCreateAction">
+              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
+              <span class="text-xs font-medium">A</span>
+            </n-button>
+          </template>
+          自定义动作
+        </n-tooltip>
+      </div>
     </div>
     <ActionForm v-model:show="actionFormVisible" :action="actionData" @save="handleActionSave"></ActionForm>
   </div>
@@ -26,8 +47,12 @@ import { Cell, CellView, Graph } from '@antv/x6'
 import { createGraph } from '../graph'
 import { restrictRect, onResize } from '../utils';
 import ActionForm from './ActionForm.vue';
-import { NButton, NIcon, NTooltip } from 'naive-ui';
-import { Add as AddIcon } from '@vicons/carbon'
+import {
+  NButton,
+  // NIcon,
+  NTooltip,
+} from 'naive-ui';
+// import { Add as AddIcon } from '@vicons/carbon'
 
 
 const layout = ref<HTMLElement|null>(null)
@@ -168,4 +193,15 @@ function handleActionSave(data: Connection.Entity.Action) {
   width: 100%;
   height: 100%;
 }
+
+.blueprint__btns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+}
+
 </style>
