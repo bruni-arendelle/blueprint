@@ -7,11 +7,16 @@
       <div class="blueprint__main">
         <div class="blueprint__graph" ref="blueprint"></div>
       </div>
-      <NButton circle type="success" @click="actionFormVisible = true" style="position: absolute; bottom: 20px; right: 20px;">
-        <template #icon><NIcon><AddIcon></AddIcon></NIcon></template>
-      </NButton>
+      <n-tooltip placement="left">
+        <template #trigger>
+          <n-button circle type="success" @click="handleCreateAction" style="position: absolute; bottom: 20px; right: 20px;">
+            <template #icon><n-icon><AddIcon></AddIcon></n-icon></template>
+          </n-button>
+        </template>
+        添加动作节点
+      </n-tooltip>
     </div>
-    <ActionForm v-model:show="actionFormVisible"></ActionForm>
+    <ActionForm v-model:show="actionFormVisible" :action="actionData" @save="handleActionSave"></ActionForm>
   </div>
 </template>
 
@@ -21,7 +26,7 @@ import { Cell, CellView, Graph } from '@antv/x6'
 import { createGraph } from '../graph'
 import { restrictRect, onResize } from '../utils';
 import ActionForm from './ActionForm.vue';
-import { NButton, NIcon } from 'naive-ui';
+import { NButton, NIcon, NTooltip } from 'naive-ui';
 import { Add as AddIcon } from '@vicons/carbon'
 
 
@@ -115,7 +120,17 @@ onBeforeUnmount(() => {
   }
 })
 
-const actionFormVisible = ref(false)
+const actionFormVisible = ref(false);
+const actionData = ref<{id?: null}|Connection.Entity.Action>({});
+
+function handleCreateAction() {
+  actionData.value = {};
+  actionFormVisible.value = true;
+}
+
+function handleActionSave(data: Connection.Entity.Action) {
+  console.log('添加动作节点', data)
+}
 </script>
 
 <style scoped>
