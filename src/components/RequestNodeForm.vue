@@ -26,12 +26,6 @@
         <n-form-item label="描述" path="desc" first>
           <n-input v-model:value="formdata.desc" placeholder="描述" />
         </n-form-item>
-        <n-form-item label="变量名" path="key" first>
-          <n-input v-model:value="formdata.key" placeholder="变量名" />
-        </n-form-item>
-        <n-form-item label="类型描述" path="type" first>
-          <n-input type="textarea" v-model:value="formdata.type" placeholder="类型描述" />
-        </n-form-item>
         <div class="flex justify-end">
           <n-button @click="handleCancel">取消</n-button>
           <n-button type="primary" class="ml-3" @click="handleSubmit">保存</n-button>
@@ -52,14 +46,16 @@ import {
 } from 'naive-ui';
 import { ref, watch } from 'vue';
 import { v4 as uuid } from 'uuid';
-import { pick } from 'es-toolkit';
+// import { omit } from 'es-toolkit';
 
+
+type Normal = Connection.NormalRequest
+type Oname = Connection.OnameRequest
 
 type Formdata = {
   title: null|string
   desc: null|string
-  key: null|string
-  type: null|string
+  requests: Array<Normal|Oname>
 }
 
 type Props = {
@@ -85,19 +81,37 @@ watch(innerShow, newVal => {
 
 const formRef = ref<null|typeof NForm>(null);
 
+// function cloneRequest(request: Normal): Normal
+// function cloneRequest(request: Oname): Oname
+function cloneRequest<T extends object>(request: T): T {
+  return JSON.parse(JSON.stringify(request));
+  // if (request.type === Connection.REQUEST_TYPE.NORMAL) {
+  //   return {
+  //     ...omit(request, ['headers', 'payload']),
+  //     headers: { ...request.headers },
+  //     payload: { ...request.payload },
+  //   };
+  // } else {
+  //   return { ...request };
+  // }
+}
+
 /**
  * 生成表单数据
  * @param data - 传入节点数据
  */
-function generateFormdata(data: {id?: never}|Connection.DataNode = {}) {
+function generateFormdata(data: {id?: never}|Connection.RequestNode = {}) {
   if (data.id) {
-    return pick(data, ['title', 'desc', 'key', 'type']);
+    return {
+      title: data.title,
+      desc: data.desc,
+      requests: data.requests.map(r => cloneRequest(r)),
+    };
   }
   return {
     title: null,
     desc: null,
-    key: null,
-    type: '{}',
+    requests: [] as Array<Normal|Oname>,
   };
 }
 
@@ -117,20 +131,14 @@ watch(innerShow, (newVal) => {
 function generateSubmitData() {
   return {
     id: props.nodeData.id || uuid(),
-    cate: Connection.NODE_CATE.DATA,
     ...formdata.value
-  } as Connection.DataNode;
+  } as Connection.RequestNode;
 }
 
 /** 验证规则 */
 const rules = {
   title: {required: true, message: '不能为空', trigger: ['submit']},
   // desc: {required: true, message: '请输入描述', trigger: ['submit']},
-  key: [
-    {required: true, message: '不能为空', trigger: ['submit']},
-    {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '只允许大小写字母、数字及下划线，且不能以数字开头', trigger: ['submit']},
-  ],
-  type: {required: true, message: '不能为空', trigger: ['submit']},
 };
 
 function handleCancel() {

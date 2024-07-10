@@ -10,26 +10,26 @@
       <div class="blueprint__btns">
         <n-tooltip placement="left">
           <template #trigger>
-            <n-button circle type="info" class="shadow-md" @click="handleCreateDataNode">
+            <n-button circle type="info" class="shadow-md" @click="handleCreateRequestNode">
               <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
               <span class="text-xs font-medium">R</span>
             </n-button>
           </template>
-          自定义请求
+          新建公共请求
         </n-tooltip>
         <n-tooltip placement="left">
           <template #trigger>
-            <n-button circle type="primary" class="mt-3 shadow-md" @click="handleCreateRequestNode">
+            <n-button circle type="primary" class="mt-3 shadow-md" @click="handleCreateDataNode">
               <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
               <span class="text-xs font-medium">D</span>
             </n-button>
           </template>
-          自定义公共数据
+          新建公共变量
         </n-tooltip>
       </div>
     </div>
     <DataNodeForm v-model:show="dataNodeFormVisible" :node-data="dataNodeData" @save="handleDataNodeSave"></DataNodeForm>
-    <RequestNodeForm v-model:show="dataNodeFormVisible" :node-data="requestNodeData" @save="handleRequestNodeSave"></RequestNodeForm>
+    <RequestNodeForm v-model:show="requestNodeFormVisible" :node-data="requestNodeData" @save="handleRequestNodeSave"></RequestNodeForm>
   </div>
 </template>
 

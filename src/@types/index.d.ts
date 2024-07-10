@@ -1,6 +1,6 @@
 
 declare namespace Connection {
-  enum NODE_CATE {
+  enum NODE_TYPE {
     COMPONENT = 'component',
     DATA = 'data',
     REQUEST = 'request',
@@ -15,26 +15,31 @@ declare namespace Connection {
     /** 描述 */
     desc: string
     /** 分类 */
-    cate: NODE_CATE
+    type: NODE_TYPE
   }
 
   /** 组件节点 */
   interface ComponentNode extends BaseNode {
-    cate: NODE_CATE.COMPONENT
+    type: NODE_TYPE.COMPONENT
   }
   
   /** 公共变量 */
   interface DataNode extends BaseNode {
-    cate: NODE_CATE.DATA
+    type: NODE_TYPE.DATA
     /** 变量名 */
-    key: string
+    dataName: string
     /** 类型 */
-    type: string
+    dataType: string
+  }
+
+  enum REQUEST_TYPE {
+    NORMAL = 'normal',
+    ONAME = 'oname',
   }
 
   interface RequestBase {
     id: string
-    type: 'normal'|'oname'
+    type: REQUEST_TYPE
     /** 执行间隔 */
     interval: number
     /** 是否立即执行 */
@@ -45,29 +50,29 @@ declare namespace Connection {
   
   /** 常规请求 */
   interface NormalRequest extends RequestBase {
-    type: 'normal'
+    type: REQUEST_TYPE.NORMAL
     url: string
     method: 'GET'|'POST'
-    headers: Array<{key: string, value: string}>
+    headers: object
     payload: object
   }
   
   /** oName 请求 */
   interface OnameRequest extends RequestBase {
-    type: 'oname'
+    type: REQUEST_TYPE.ONAME
     oname: string
   }
   
   /** 公共请求节点 */
   interface RequestNode extends BaseNode {
-    cate: NODE_CATE.REQUEST
+    type: NODE_TYPE.REQUEST
     /** 请求队列 */
     requests: Array<NormalRequest|OnameRequest>
   }
   
   /** 预设动作节点 */
   interface ActionNode extends BaseNode {
-    cate: NODE_CATE.ACTION
+    type: NODE_TYPE.ACTION
     /** 参数类型 */
     argType: string
     /** 参数描述 */
@@ -77,56 +82,50 @@ declare namespace Connection {
   /** 节点类型 */
   type Node = ComponentNode|DataNode|RequestNode|ActionNode
 
-  namespace Port {
-    /** 连接桩类型 */
-    enum GROUP {
-      EVENT = 'event',
-      ACTION = 'action',
-      REFERENCE = 'reference',
-    }
+  /** 连接桩类型 */
+  enum PORT_TYPE {
+    EVENT = 'event',
+    ACTION = 'action',
+    REFERENCE = 'reference',
+  }
 
-    interface Base {
-      /** id */
-      id: string
-      /** 节点 id */
-      node: string
-      /** 显示名 */
-      title: string
-      /** 描述 */
-      desc: string
-      /** 类型 */
-      group: GROUP
-    }
-    
-    /** 事件 */
-    interface Event extends Base {
-      /** 类型 */
-      group: GROUP.EVENT
-      /** 参数类型 */
-      argType: string
-      // /** 参数名 */
-      // argName: string
-      // /** 参数描述 */
-      // argDesc?: string
-    }
+  interface BasePort {
+    /** id */
+    id: string
+    /** 节点 id */
+    node: string
+    /** 显示名 */
+    title: string
+    /** 描述 */
+    desc: string
+    /** 分类 */
+    type: PORT_TYPE
+  }
+  
+  /** 事件 */
+  interface EventPort extends BasePort {
+    /** 类型 */
+    type: PORT_TYPE.EVENT
+    /** 参数类型 */
+    argType: string
+  }
 
-    /** 动作 */
-    interface Action extends Base {
-      /** 类型 */
-      group: GROUP.ACTION
-      /** 参数类型 */
-      argType: string
-    }
+  /** 动作 */
+  interface ActionPort extends BasePort {
+    /** 类型 */
+    type: PORT_TYPE.ACTION
+    /** 参数类型 */
+    argType: string
+  }
 
-    /** 引用 */
-    interface Reference extends Base {
-      /** 类型 */
-      group: GROUP.REFERENCE
-    }
+  /** 引用 */
+  interface ReferencePort extends BasePort {
+    /** 类型 */
+    type: PORT_TYPE.REFERENCE
   }
 
   /** 连接桩类型 */
-  type Port = Port.Event|Port.Action|Port.Reference
+  type Port = EventPort|ActionPort|ReferencePort
 
   enum TYPE {
     SIGNAL = 'signal',

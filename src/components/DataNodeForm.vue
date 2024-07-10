@@ -26,11 +26,11 @@
         <n-form-item label="描述" path="desc" first>
           <n-input v-model:value="formdata.desc" placeholder="描述" />
         </n-form-item>
-        <n-form-item label="变量名" path="key" first>
-          <n-input v-model:value="formdata.key" placeholder="变量名" />
+        <n-form-item label="变量名" path="dataName" first>
+          <n-input v-model:value="formdata.dataName" placeholder="变量名" />
         </n-form-item>
-        <n-form-item label="类型描述" path="type" first>
-          <n-input type="textarea" v-model:value="formdata.type" placeholder="类型描述" />
+        <n-form-item label="类型描述" path="dataType" first>
+          <n-input type="textarea" v-model:value="formdata.dataType" placeholder="类型描述" />
         </n-form-item>
         <div class="flex justify-end">
           <n-button @click="handleCancel">取消</n-button>
@@ -58,8 +58,8 @@ import { pick } from 'es-toolkit';
 type Formdata = {
   title: null|string
   desc: null|string
-  key: null|string
-  type: null|string
+  dataName: null|string
+  dataType: null|string
 }
 
 type Props = {
@@ -91,13 +91,13 @@ const formRef = ref<null|typeof NForm>(null);
  */
 function generateFormdata(data: {id?: never}|Connection.DataNode = {}) {
   if (data.id) {
-    return pick(data, ['title', 'desc', 'key', 'type']);
+    return pick(data, ['title', 'desc', 'dataName', 'dataType']);
   }
   return {
     title: null,
     desc: null,
-    key: null,
-    type: '{}',
+    dataName: null,
+    dataType: '{}',
   };
 }
 
@@ -117,7 +117,7 @@ watch(innerShow, (newVal) => {
 function generateSubmitData() {
   return {
     id: props.nodeData.id || uuid(),
-    cate: Connection.NODE_CATE.DATA,
+    type: Connection.NODE_TYPE.DATA,
     ...formdata.value
   } as Connection.DataNode;
 }
@@ -126,11 +126,11 @@ function generateSubmitData() {
 const rules = {
   title: {required: true, message: '不能为空', trigger: ['submit']},
   // desc: {required: true, message: '请输入描述', trigger: ['submit']},
-  key: [
+  dataName: [
     {required: true, message: '不能为空', trigger: ['submit']},
     {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '只允许大小写字母、数字及下划线，且不能以数字开头', trigger: ['submit']},
   ],
-  type: {required: true, message: '不能为空', trigger: ['submit']},
+  dataType: {required: true, message: '不能为空', trigger: ['submit']},
 };
 
 function handleCancel() {
