@@ -10,7 +10,7 @@
       <div class="blueprint__btns">
         <n-tooltip placement="left">
           <template #trigger>
-            <n-button circle type="info" class="shadow-md" @click="handleCreateAction">
+            <n-button circle type="info" class="shadow-md" @click="handleCreateDataNode">
               <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
               <span class="text-xs font-medium">R</span>
             </n-button>
@@ -19,34 +19,33 @@
         </n-tooltip>
         <n-tooltip placement="left">
           <template #trigger>
-            <n-button circle type="success" class="mt-3 shadow-md" @click="handleCreateAction">
+            <n-button circle type="primary" class="mt-3 shadow-md" @click="handleCreateRequestNode">
               <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
               <span class="text-xs font-medium">D</span>
             </n-button>
           </template>
           自定义公共数据
         </n-tooltip>
-        <n-tooltip placement="left">
-          <template #trigger>
-            <n-button circle type="warning" class="mt-3 shadow-md" @click="handleCreateAction">
-              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
-              <span class="text-xs font-medium">A</span>
-            </n-button>
-          </template>
-          自定义动作
-        </n-tooltip>
       </div>
     </div>
-    <ActionForm v-model:show="actionFormVisible" :action="actionData" @save="handleActionSave"></ActionForm>
+    <DataNodeForm v-model:show="dataNodeFormVisible" :node-data="dataNodeData" @save="handleDataNodeSave"></DataNodeForm>
+    <RequestNodeForm v-model:show="dataNodeFormVisible" :node-data="requestNodeData" @save="handleRequestNodeSave"></RequestNodeForm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, shallowReactive, nextTick } from 'vue'
-import { Cell, CellView, Graph } from '@antv/x6'
-import { createGraph } from '../graph'
+import {
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  shallowReactive,
+  nextTick,
+} from 'vue';
+import { Cell, CellView, Graph } from '@antv/x6';
+import { createGraph } from '../graph';
 import { restrictRect, onResize } from '../utils';
-import ActionForm from './ActionForm.vue';
+import DataNodeForm from './DataNodeForm.vue';
+import RequestNodeForm from './RequestNodeForm.vue';
 import {
   NButton,
   // NIcon,
@@ -145,16 +144,38 @@ onBeforeUnmount(() => {
   }
 })
 
-const actionFormVisible = ref(false);
-const actionData = ref<{id?: null}|Connection.Entity.Action>({});
 
-function handleCreateAction() {
-  actionData.value = {};
-  actionFormVisible.value = true;
+///////////////////////////////////////////////////////////////////////////////
+// 公共变量节点
+///////////////////////////////////////////////////////////////////////////////
+
+const dataNodeFormVisible = ref(false);
+const dataNodeData = ref<{id?: never}|Connection.DataNode>({});
+
+function handleCreateDataNode() {
+  dataNodeData.value = {};
+  dataNodeFormVisible.value = true;
 }
 
-function handleActionSave(data: Connection.Entity.Action) {
-  console.log('添加动作节点', data)
+function handleDataNodeSave(data: Connection.DataNode) {
+  console.log('添加公共变量节点：', data)
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// 数据节点
+///////////////////////////////////////////////////////////////////////////////
+
+const requestNodeFormVisible = ref(false);
+const requestNodeData = ref<{id?: never}|Connection.RequestNode>({});
+
+function handleCreateRequestNode() {
+  requestNodeData.value = {};
+  requestNodeFormVisible.value = true;
+}
+
+function handleRequestNodeSave(data: Connection.RequestNode) {
+  console.log('添加公共请求节点：', data)
 }
 </script>
 

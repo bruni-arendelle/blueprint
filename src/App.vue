@@ -18,7 +18,6 @@
           </n-layout-sider>
           <n-layout content-style="padding: 16px;">
             <n-text>内容区</n-text>
-            <n-button type="info">按钮</n-button>
           </n-layout>
         </n-layout>
       </n-layout>
@@ -52,7 +51,6 @@ import {
   NTooltip,
   NIcon,
   NModal,
-  NButton,
 } from 'naive-ui'
 // import { FloatingIp, EdtLoop } from '@vicons/carbon'
 import { AllInclusiveSharp } from '@vicons/material'
