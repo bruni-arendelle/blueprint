@@ -127,15 +127,15 @@ declare namespace Connection {
   /** 连接桩类型 */
   type Port = EventPort|ActionPort|ReferencePort
 
-  enum TYPE {
+  enum LINE_TYPE {
     SIGNAL = 'signal',
     REFERENCE = 'reference',
   }
 
-  /** 连接 */
-  interface Record {
+  /** 连线 */
+  interface Line {
     /** 连接类型 */
-    type: TYPE
+    type: LINE_TYPE
     /** 起始端 */
     source: string
     /** 结束端 */

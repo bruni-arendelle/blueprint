@@ -29,8 +29,8 @@
         <n-form-item label="变量名" path="dataName" first>
           <n-input v-model:value="formdata.dataName" placeholder="变量名" />
         </n-form-item>
-        <n-form-item label="类型描述" path="dataType" first>
-          <n-input type="textarea" v-model:value="formdata.dataType" placeholder="类型描述" />
+        <n-form-item label="类型" path="dataType" first>
+          <n-input type="textarea" v-model:value="formdata.dataType" placeholder="类型" />
         </n-form-item>
         <div class="flex justify-end">
           <n-button @click="handleCancel">取消</n-button>
@@ -97,7 +97,7 @@ function generateFormdata(data: {id?: never}|Connection.DataNode = {}) {
     title: null,
     desc: null,
     dataName: null,
-    dataType: '{}',
+    dataType: 'any',
   };
 }
 
