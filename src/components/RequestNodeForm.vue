@@ -1,6 +1,6 @@
 <template>
   <!-- 公共变量 -->
-  <n-modal v-model:show="innerShow"
+  <n-modal :show="show" @update:show="emit('update:show', $event)"
     :close-on-esc="false"
     :mask-closable="false"
     transform-origin="center"
@@ -66,18 +66,18 @@ type Props = {
 const props = defineProps<Props>();
 const emit = defineEmits(['update:show', 'save']);
 
-// 同步内外显示状态
-const innerShow = ref(false);
-watch(() => props.show, newVal => {
-  if (newVal !== innerShow.value) {
-    innerShow.value = newVal;
-  }
-});
-watch(innerShow, newVal => {
-  if (newVal !== props.show) {
-    emit('update:show', newVal);
-  }
-});
+// // 同步内外显示状态
+// const innerShow = ref(false);
+// watch(() => props.show, newVal => {
+//   if (newVal !== innerShow.value) {
+//     innerShow.value = newVal;
+//   }
+// });
+// watch(innerShow, newVal => {
+//   if (newVal !== props.show) {
+//     emit('update:show', newVal);
+//   }
+// });
 
 const formRef = ref<null|typeof NForm>(null);
 
@@ -118,13 +118,17 @@ function generateFormdata(data: {id?: never}|Connection.RequestNode = {}) {
 /** 表单数据 */
 const formdata = ref<Formdata>(generateFormdata(props.nodeData));
 
-// 显示时，初始化表单
-watch(innerShow, (newVal) => {
-  if (newVal) {
-    formdata.value = generateFormdata(props.nodeData);
-    // 还原到未验证状态
-    formRef.value?.restoreValidation();
-  }
+// // 显示时，初始化表单
+// watch(innerShow, (newVal) => {
+//   if (newVal) {
+//     formdata.value = generateFormdata(props.nodeData);
+//     // 还原到未验证状态
+//     formRef.value?.restoreValidation();
+//   }
+// });
+
+watch(() => props.nodeData, (newData) => {
+  formdata.value = generateFormdata(newData)
 });
 
 /** 生成提交数据 */
@@ -142,7 +146,8 @@ const rules = {
 };
 
 function handleCancel() {
-  innerShow.value = false;
+  // innerShow.value = false;
+  emit('update:show', false);
 }
 
 function handleSubmit(e: MouseEvent) {
@@ -150,7 +155,8 @@ function handleSubmit(e: MouseEvent) {
   formRef.value?.validate().then(() => {
     const submitData = generateSubmitData();
     emit('save', submitData);
-    innerShow.value = false;
+    // innerShow.value = false;
+    emit('update:show', false);
   }).catch(() => {
     // console.log('验证失败')
   });
