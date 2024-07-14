@@ -4,7 +4,7 @@ declare namespace Connection {
     COMPONENT = 'component',
     DATA = 'data',
     REQUEST = 'request',
-    ACTION = 'action',
+    PRESET = 'preset',
   }
 
   interface BaseNode {
@@ -37,50 +37,72 @@ declare namespace Connection {
     ONAME = 'oname',
   }
 
-  interface RequestBase {
-    id: string
-    type: REQUEST_TYPE
-    /** 执行间隔 */
+  // interface RequestBase {
+  //   id: string
+  //   type: REQUEST_TYPE
+  //   /** 执行间隔 */
+  //   interval: number
+  //   /** 是否立即执行 */
+  //   immediate: boolean
+  //   /** 结果处理 */
+  //   filter: string|null
+  // }
+  
+  // /** 常规请求 */
+  // interface NormalRequest extends RequestBase {
+  //   type: REQUEST_TYPE.NORMAL
+  //   url: string
+  //   method: 'GET'|'POST'
+  //   headers: object
+  //   payload: object
+  // }
+  
+  // /** oName 请求 */
+  // interface OnameRequest extends RequestBase {
+  //   type: REQUEST_TYPE.ONAME
+  //   oname: string
+  // }
+
+  // /** 公共请求节点 */
+  // interface RequestNode extends BaseNode {
+  //   type: NODE_TYPE.REQUEST
+  //   /** 请求队列 */
+  //   requests: Array<NormalRequest|OnameRequest>
+  // }
+
+  interface NormalRequestNode extends BaseNode {
+    type: NODE_TYPE.REQUEST
+    requestType: REQUEST_TYPE.NORMAL
+    method: 'GET'|'POST'
+    url: string
+    headers: Array<{key: string, value: string}>
+    payload: object
     interval: number
-    /** 是否立即执行 */
-    immediate: boolean
-    /** 结果处理 */
     filter: string|null
   }
-  
-  /** 常规请求 */
-  interface NormalRequest extends RequestBase {
-    type: REQUEST_TYPE.NORMAL
-    url: string
-    method: 'GET'|'POST'
-    headers: object
-    payload: object
-  }
-  
-  /** oName 请求 */
-  interface OnameRequest extends RequestBase {
-    type: REQUEST_TYPE.ONAME
+
+  interface OnameParams {
     oname: string
+    attr: string[]
+    interval: number
+  }
+
+  interface OnameRequestNode extends BaseNode {
+    type: NODE_TYPE.REQUEST
+    requestType: REQUEST_TYPE.ONAME
+    params: Array<OnameParams>
   }
   
   /** 公共请求节点 */
-  interface RequestNode extends BaseNode {
-    type: NODE_TYPE.REQUEST
-    /** 请求队列 */
-    requests: Array<NormalRequest|OnameRequest>
-  }
+  type RequestNode = NormalRequestNode|OnameRequestNode
   
-  /** 预设动作节点 */
-  interface ActionNode extends BaseNode {
-    type: NODE_TYPE.ACTION
-    /** 参数类型 */
-    argType: string
-    /** 参数描述 */
-    argDesc?: string
+  /** 预设节点 */
+  interface PresetNode extends BaseNode {
+    type: NODE_TYPE.PRESET
   }
   
   /** 节点类型 */
-  type Node = ComponentNode|DataNode|RequestNode|ActionNode
+  type Node = ComponentNode|DataNode|RequestNode|PresetNode
 
   /** 连接桩类型 */
   enum PORT_TYPE {

@@ -6,7 +6,7 @@
     transform-origin="center"
   >
     <n-card
-      style="width: 480px"
+      style="width: 600px"
       title="公共变量"
       :bordered="false"
       role="dialog"
@@ -26,6 +26,9 @@
         <n-form-item label="描述" path="desc" first>
           <n-input v-model:value="formdata.desc" placeholder="描述" />
         </n-form-item>
+        <n-form-item label="请求类型">
+          <n-select v-model:value="formdata.desc" placeholder="描述"></n-select>
+        </n-form-item>
         <div class="flex justify-end">
           <n-button @click="handleCancel">取消</n-button>
           <n-button type="primary" class="ml-3" @click="handleSubmit">保存</n-button>
@@ -43,19 +46,29 @@ import {
   NForm,
   NFormItem,
   NInput,
+  NSelect,
 } from 'naive-ui';
 import { ref, watch } from 'vue';
 import { v4 as uuid } from 'uuid';
 // import { omit } from 'es-toolkit';
 
 
-type Normal = Connection.NormalRequest
-type Oname = Connection.OnameRequest
+// type Normal = Connection.NormalRequest
+// type Oname = Connection.OnameRequest
 
 type Formdata = {
   title: null|string
   desc: null|string
-  requests: Array<Normal|Oname>
+  requestType: Connection.REQUEST_TYPE
+
+  method: 'GET'|'POST'
+  headers: Array<{key: string|null, value: string|null}>
+  payload: null|object
+  url: null|string
+  interval: null|number
+  filter: null|string
+
+  params: Array<Connection.OnameParams>
 }
 
 type Props = {
