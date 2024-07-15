@@ -90,7 +90,7 @@ declare namespace Connection {
   interface OnameRequestNode extends BaseNode {
     type: NODE_TYPE.REQUEST
     requestType: REQUEST_TYPE.ONAME
-    params: Array<OnameParams>
+    onames: Array<OnameParams>
   }
   
   /** 公共请求节点 */
