@@ -8,15 +8,11 @@
         <div class="blueprint__graph" ref="blueprint"></div>
       </div>
       <div class="blueprint__btns">
-        <n-tooltip placement="left">
-          <template #trigger>
-            <n-button circle type="info" class="shadow-md" @click="handleCreateRequestNode">
-              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
-              <span class="text-xs font-medium">R</span>
-            </n-button>
-          </template>
-          新建公共请求
-        </n-tooltip>
+        <n-popselect placement="left-start" :options="requestTypeOptions" trigger="click" @update:value="handleCreateRequestNode">
+          <n-button circle type="info" class="shadow-md">
+            <span class="text-xs font-medium">R</span>
+          </n-button>
+        </n-popselect>
         <n-tooltip placement="left">
           <template #trigger>
             <n-button circle type="primary" class="mt-3 shadow-md" @click="handleCreateDataNode">
@@ -50,7 +46,10 @@ import {
   NButton,
   // NIcon,
   NTooltip,
+  NPopselect,
 } from 'naive-ui';
+import type * as Connection from '../types/connection';
+import { REQUEST_TYPE } from '../types/connection';
 // import { Add as AddIcon } from '@vicons/carbon'
 
 
@@ -146,7 +145,7 @@ onBeforeUnmount(() => {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// 公共变量节点
+// 数据节点
 ///////////////////////////////////////////////////////////////////////////////
 
 const dataNodeFormVisible = ref(false);
@@ -163,15 +162,22 @@ function handleDataNodeSave(data: Connection.DataNode) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// 数据节点
+// 公共请求节点
 ///////////////////////////////////////////////////////////////////////////////
+
+/** 请求类型选项 */
+const requestTypeOptions = [
+  {value: REQUEST_TYPE.NORMAL, label: '新建常规请求'},
+  {value: REQUEST_TYPE.ONAME, label: '新建 oName 请求'},
+]
 
 const requestNodeFormVisible = ref(false);
 const requestNodeData = ref<{id?: never}|Connection.RequestNode>({});
 
-function handleCreateRequestNode() {
-  requestNodeData.value = {};
-  requestNodeFormVisible.value = true;
+function handleCreateRequestNode(requestType: REQUEST_TYPE) {
+  console.log('requestType', {requestType})
+  // requestNodeData.value = {};
+  // requestNodeFormVisible.value = true;
 }
 
 function handleRequestNodeSave(data: Connection.RequestNode) {

@@ -55,6 +55,13 @@ import {
 } from 'naive-ui';
 import { v4 as uuid } from 'uuid';
 // import { omit } from 'es-toolkit';
+// import type * as Connection from '../types/connection'
+import {
+  type RequestNode,
+  type NormalRequestNode,
+  type OnameRequestNode,
+  REQUEST_TYPE,
+} from '../types/connection'
 
 
 // type Normal = Connection.NormalRequest
@@ -66,7 +73,7 @@ type Oname = {oname: string|null, attr: string|null, interval: number}
 type Formdata = {
   title: null|string
   desc: null|string
-  requestType: Connection.REQUEST_TYPE
+  requestType: REQUEST_TYPE
 
   method: null|'GET'|'POST'
   headers: Array<Header>
@@ -80,7 +87,7 @@ type Formdata = {
 
 type Props = {
   show: boolean
-  nodeData: {id?: never}|Connection.RequestNode
+  nodeData: {id?: never}|RequestNode
 }
 
 const props = defineProps<Props>();
@@ -121,7 +128,7 @@ function getDefaultFormdata() {
   return {
     title: null,
     desc: null,
-    requestType: Connection.REQUEST_TYPE.NORMAL,
+    requestType: REQUEST_TYPE.NORMAL,
     method: 'GET',
     url: null,
     headers: [] as Array<Header>,
@@ -134,7 +141,7 @@ function getDefaultFormdata() {
 }
 
 /** 使用常规请求节点构造表单数据 */
-function getNormalFormdata(node: Connection.NormalRequestNode) {
+function getNormalFormdata(node: NormalRequestNode) {
   return {
     title: node.title,
     desc: node.desc,
@@ -151,7 +158,7 @@ function getNormalFormdata(node: Connection.NormalRequestNode) {
 }
 
 /** 使用 oName 请求节点构造表单数据 */
-function getOnameFormdata(node: Connection.OnameRequestNode) {
+function getOnameFormdata(node: OnameRequestNode) {
   return {
     title: node.title,
     desc: node.desc,
@@ -176,14 +183,14 @@ function getOnameFormdata(node: Connection.OnameRequestNode) {
  * 生成表单数据
  * @param data - 传入节点数据
  */
-function generateFormdata(data: {id?: never}|Connection.RequestNode = {}): Formdata {
+function generateFormdata(data: {id?: never}|RequestNode = {}): Formdata {
   // 未指定节点时返回默认初始数据
   if (!data.id) {
     return getDefaultFormdata();
   }
 
   // 常规请求
-  if (data.requestType === Connection.REQUEST_TYPE.NORMAL) {
+  if (data.requestType === REQUEST_TYPE.NORMAL) {
     return getNormalFormdata(data);
   }
 
@@ -209,15 +216,15 @@ watch(() => props.nodeData, (newData) => {
 
 /** 请求类型选项 */
 const requestTypeOptions = [
-  {value: Connection.REQUEST_TYPE.NORMAL, label: '常规'},
-  {value: Connection.REQUEST_TYPE.ONAME, label: 'oName'},
+  {value: REQUEST_TYPE.NORMAL, label: '常规'},
+  {value: REQUEST_TYPE.ONAME, label: 'oName'},
 ]
 
 /** 生成提交数据 */
 function generateSubmitData() {
   const id = props.nodeData.id || uuid();
   const {title, desc, requestType} = formdata.value
-  if (requestType === Connection.REQUEST_TYPE.NORMAL) {
+  if (requestType === REQUEST_TYPE.NORMAL) {
     return {
       id,
       title,
@@ -230,7 +237,7 @@ function generateSubmitData() {
       payload: formdata.value.payload ? JSON.parse(formdata.value.payload) : {},
       interval: formdata.value.interval,
       filter: formdata.value.filter,
-    } as Connection.NormalRequestNode;
+    } as NormalRequestNode;
   } else {
     return {
       id,
@@ -243,7 +250,7 @@ function generateSubmitData() {
         attr: o.attr?.split(',') || [],
         interval: o.interval,
       })),
-    } as Connection.OnameRequestNode;
+    } as OnameRequestNode;
   }
 }
 
