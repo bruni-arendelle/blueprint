@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import {
   NModal,
   NCard,
@@ -50,9 +51,10 @@ import {
   NFormItem,
   NInput,
 } from 'naive-ui';
-import { ref, watch } from 'vue';
 import { v4 as uuid } from 'uuid';
 import { pick } from 'es-toolkit';
+import type * as Connection from '../types/connection';
+import { NODE_TYPE } from '../types/connection';
 
 
 type Formdata = {
@@ -108,7 +110,7 @@ watch(() => props.nodeData, (newData) => {
 function generateSubmitData() {
   return {
     id: props.nodeData.id || uuid(),
-    type: Connection.NODE_TYPE.DATA,
+    type: NODE_TYPE.DATA,
     ...formdata.value
   } as Connection.DataNode;
 }

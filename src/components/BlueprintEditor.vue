@@ -8,20 +8,11 @@
         <div class="blueprint__graph" ref="blueprint"></div>
       </div>
       <div class="blueprint__btns">
-        <n-popselect placement="left-start" :options="requestTypeOptions" trigger="click" @update:value="handleCreateRequestNode">
-          <n-button circle type="info" class="shadow-md">
-            <span class="text-xs font-medium">R</span>
+        <n-popselect placement="left-end" :options="requestTypeOptions" trigger="click" @update:value="handleCreateRequestNode">
+          <n-button circle type="primary" class="mt-3 shadow-md">
+            <template #icon><n-icon><AddIcon></AddIcon></n-icon></template>
           </n-button>
         </n-popselect>
-        <n-tooltip placement="left">
-          <template #trigger>
-            <n-button circle type="primary" class="mt-3 shadow-md" @click="handleCreateDataNode">
-              <!-- <template #icon><n-icon><AddIcon></AddIcon></n-icon></template> -->
-              <span class="text-xs font-medium">D</span>
-            </n-button>
-          </template>
-          新建公共变量
-        </n-tooltip>
       </div>
     </div>
     <DataNodeForm v-model:show="dataNodeFormVisible" :node-data="dataNodeData" @save="handleDataNodeSave"></DataNodeForm>
@@ -44,13 +35,13 @@ import DataNodeForm from './DataNodeForm.vue';
 import RequestNodeForm from './RequestNodeForm.vue';
 import {
   NButton,
-  // NIcon,
-  NTooltip,
+  NIcon,
+  // NTooltip,
   NPopselect,
 } from 'naive-ui';
 import type * as Connection from '../types/connection';
-import { REQUEST_TYPE } from '../types/connection';
-// import { Add as AddIcon } from '@vicons/carbon'
+import { REQUEST_TYPE, NODE_TYPE } from '../types/connection';
+import { Add as AddIcon } from '@vicons/carbon';
 
 
 const layout = ref<HTMLElement|null>(null)
@@ -151,10 +142,10 @@ onBeforeUnmount(() => {
 const dataNodeFormVisible = ref(false);
 const dataNodeData = ref<{id?: never}|Connection.DataNode>({});
 
-function handleCreateDataNode() {
-  dataNodeData.value = {};
-  dataNodeFormVisible.value = true;
-}
+// function handleCreateDataNode() {
+//   dataNodeData.value = {};
+//   dataNodeFormVisible.value = true;
+// }
 
 function handleDataNodeSave(data: Connection.DataNode) {
   console.log('添加公共变量节点：', data)
@@ -167,15 +158,16 @@ function handleDataNodeSave(data: Connection.DataNode) {
 
 /** 请求类型选项 */
 const requestTypeOptions = [
-  {value: REQUEST_TYPE.NORMAL, label: '新建常规请求'},
-  {value: REQUEST_TYPE.ONAME, label: '新建 oName 请求'},
+  {value: REQUEST_TYPE.NORMAL, label: '常规请求'},
+  {value: REQUEST_TYPE.ONAME, label: 'oName 请求'},
+  {value: NODE_TYPE.DATA, label: '公共数据'},
 ]
 
 const requestNodeFormVisible = ref(false);
 const requestNodeData = ref<{id?: never}|Connection.RequestNode>({});
 
-function handleCreateRequestNode(requestType: REQUEST_TYPE) {
-  console.log('requestType', {requestType})
+function handleCreateRequestNode(selected: string) {
+  console.log('selected', {selected})
   // requestNodeData.value = {};
   // requestNodeFormVisible.value = true;
 }

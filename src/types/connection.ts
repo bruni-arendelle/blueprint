@@ -1,9 +1,9 @@
 
 export enum NODE_TYPE {
-  COMPONENT = 'component',
-  DATA = 'data',
-  REQUEST = 'request',
-  PRESET = 'preset',
+  COMPONENT = 'component-node',
+  DATA = 'data-node',
+  REQUEST = 'request-node',
+  PRESET = 'preset-node',
 }
 
 interface BaseNode {
@@ -32,8 +32,8 @@ export interface DataNode extends BaseNode {
 }
 
 export enum REQUEST_TYPE {
-  NORMAL = 'normal',
-  ONAME = 'oname',
+  NORMAL = 'normal-request',
+  ONAME = 'oname-request',
 }
 
 export interface NormalRequestNode extends BaseNode {
