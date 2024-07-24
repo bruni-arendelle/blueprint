@@ -29,7 +29,7 @@ import {
   nextTick,
 } from 'vue';
 import { Cell, CellView, Graph } from '@antv/x6';
-import { createGraph } from '../graph';
+import { calcHeight, createGraph } from '../graph';
 import { restrictRect, onResize } from '../utils';
 import DataNodeForm from './DataNodeForm.vue';
 import RequestNodeForm from './RequestNodeForm.vue';
@@ -85,41 +85,118 @@ function loadGraph() {
 
   graph.on('edit-transfer', function(args: {e: MouseEvent, cell: Cell, view: CellView}) {
     console.log('edit-transfer', {args})
-  })
+  });
 
   const node = graph.addNode({
     shape: 'entity-node',
-    x: 0,
-    y: 0,
-    label: '组件：树组件',
+    x: 20,
+    y: 120,
+    label: '时间选择器1',
     ports: {
       items: [
         { group: 'event' },
-        { group: 'event' },
-        { group: 'action' },
         { group: 'action' },
       ],
     },
   })
-  // node.prop('size/height', 90)
-  node.attr('main/height', 24*2 + 12)
+  node.attr('bottom/height', calcHeight(1))
 
   const node2 = graph.addNode({
     shape: 'entity-node',
-    x: 0,
-    y: 0,
-    label: '组件：树组件2',
+    x: 20,
+    y: 180,
+    label: '时间选择器2',
     ports: {
       items: [
         { group: 'event' },
-        { group: 'event' },
-        { group: 'action' },
         { group: 'action' },
       ],
     },
   })
-  // node.prop('size/height', 90)
-  node2.attr('main/height', 24*2 + 12)
+  node2.attr('bottom/height', calcHeight(1))
+  
+  const node3 = graph.addNode({
+    shape: 'entity-node',
+    x: 200,
+    y: 160,
+    label: '已选时间',
+    ports: {
+      items: [
+        { group: 'action' },
+        { group: 'reference', args: {x: 0.5, y: 60} },
+      ],
+    },
+  })
+  node3.attr('bottom/height', calcHeight(1))
+  
+  const node4 = graph.addNode({
+    shape: 'entity-node',
+    x: 200,
+    y: 60,
+    label: '查询按钮',
+    ports: {
+      items: [
+        { group: 'event' },
+        { group: 'action' },
+      ],
+    },
+  })
+  node4.attr('bottom/height', calcHeight(1))
+  
+  const node5 = graph.addNode({
+    shape: 'entity-node',
+    x: 100,
+    y: 60,
+    label: '请求',
+    ports: {
+      items: [
+        { group: 'event' },
+        { group: 'action' },
+      ],
+    },
+  })
+  node5.attr('bottom/height', calcHeight(1))
+  
+  const node6 = graph.addNode({
+    shape: 'entity-node',
+    x: 100,
+    y: 60,
+    label: '折线图',
+    ports: {
+      items: [
+        { group: 'event' },
+        { group: 'action' },
+      ],
+    },
+  });
+  node6.attr('bottom/height', calcHeight(1));
+  
+  const node7 = graph.addNode({
+    shape: 'entity-node',
+    x: 100,
+    y: 60,
+    label: '部门选择器',
+    ports: {
+      items: [
+        { group: 'event' },
+        { group: 'action' },
+      ],
+    },
+  });
+  node7.attr('bottom/height', calcHeight(1));
+  
+  const node8 = graph.addNode({
+    shape: 'entity-node',
+    x: 100,
+    y: 60,
+    label: '页面跳转',
+    ports: {
+      items: [
+        { group: 'action' },
+      ],
+    },
+  });
+  node8.attr('bottom/height', calcHeight(1));
 }
 
 onMounted(() => {

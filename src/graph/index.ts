@@ -1,11 +1,15 @@
-import { CellView, Graph } from '@antv/x6'
+import { CellView, Graph } from '@antv/x6';
 
+
+const HEADER = 26;
+const RADIUS = 5;
+const MARGIN = 6;
+
+export function calcHeight(ports: number) {
+  return (RADIUS*2 + MARGIN*2)*ports + MARGIN*2*ports;
+}
 
 export function initGraph() {
-  const HEADER = 26
-  const RADIUS = 5
-  const MARGIN = 6
-
   try {
     Graph.registerPortLayout('mainleft', function(args: any[]) {
       return args.map((_, index) => {
@@ -92,7 +96,7 @@ export function initGraph() {
   try {
     Graph.registerNode('entity-node', {
       inherit: 'rect',
-      width: 160,
+      width: 120,
       // height: 90,
       markup: [
         {tagName: 'rect', selector: 'header'},
@@ -154,6 +158,22 @@ export function initGraph() {
             },
             position: {name: 'mainleft'}
           },
+          reference: {
+            attrs: {
+              circle: {
+                r: RADIUS,
+                stroke: '#2080f0',
+                strokeWidth: 1,
+                fill: '#fff',
+                magnet: true,
+              },
+            },
+            // position: 'bottom',
+            position: {
+              name: 'absolute',
+              args: { x: 0, y: 0 },
+            },
+          },
         },
       },
     })
@@ -178,14 +198,15 @@ export function createGraph(el: HTMLElement) {
       highlight: true,
       validateMagnet({magnet}) {
         // 仅允许从事件连接到动作
-        return magnet.getAttribute('port-group') === 'event'
+        const portGroup = magnet.getAttribute('port-group');
+        return portGroup === 'event' || portGroup === 'reference';
       },
       validateConnection({targetMagnet}) {
         // 仅允许从事件连接到动作
         if (targetMagnet && targetMagnet.getAttribute('port-group') === 'action') {
-          return true
+          return true;
         }
-        return false
+        return false;
       },
       createEdge() {
         return this.createEdge({
